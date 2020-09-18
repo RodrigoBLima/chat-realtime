@@ -23,10 +23,13 @@ let messages =  []
 
 io.on('connection', socket =>{
     console.log(`Conectado ${socket.id}`)
+    
+    socket.emit('previousMessages', messages)
 
     socket.on('sendMessage', data => {
         console.log(data)
         messages.push(data)
+        socket.broadcast.emit('receivedMessage', data)
     })
 })
 

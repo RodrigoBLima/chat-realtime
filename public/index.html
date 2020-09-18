@@ -22,12 +22,24 @@
     <script type="text/javascript">
         var socket  =  io(`http://localhost:3000/`)
 
-
+        // SHOW MESSAGES 
         function renderMessage(message){
             $('.messages').append('<div class="message"><strong>'+message.author+'</strong>: '+message.message+'</div>')
         }
 
+        //GET MESSAGES
+        socket.on('receivedMessage', function(message){
+            renderMessage(message)
+        })
 
+        // GET PREVIOUS MESSAGES 
+        socket.on('previousMessages', function(messages){
+            for(message of messages){
+                renderMessage(message)
+            }
+        })
+
+        // GET DATA FROM INPUTS 
         $('#chat').submit(function(event){
             event.preventDefault()
 
@@ -39,7 +51,7 @@
                     author: author,
                     message: message
                 }
-                
+
                 renderMessage(messageObject)
 
                 socket.emit('sendMessage', messageObject)
